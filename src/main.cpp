@@ -1994,8 +1994,10 @@ bool CBlock::AcceptBlock()
 {
     AssertLockHeld(cs_main);
 
-    if (nVersion > CURRENT_VERSION)
-        return DoS(100, error("AcceptBlock() : reject unknown block version %d", nVersion));
+    if (!IsProtocolV3()) {
+        if (nVersion > CURRENT_VERSION)
+            return DoS(100, error("AcceptBlock() : reject unknown block version %d", nVersion));
+    }
 
     // Check for duplicate
     uint256 hash = GetHash();
